@@ -60,7 +60,8 @@ python todo.py create-user "Ana" "ana@example.com"
 ### Asignar tarea a un usuario
 
 ```bash
-python todo.py assign 1 1
+python todo.py add "Preparar presentación"
+python todo.py assign 2 1
 ```
 
 ### Listar tareas de un usuario

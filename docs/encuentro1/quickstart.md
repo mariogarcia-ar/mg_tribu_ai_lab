@@ -51,11 +51,31 @@ python todo.py update 1 pending
 python todo.py delete 1
 ```
 
+### Crear un usuario
+
+```bash
+python todo.py create-user "Ana" "ana@example.com"
+```
+
+### Asignar tarea a un usuario
+
+```bash
+python todo.py assign 1 1
+```
+
+### Listar tareas de un usuario
+
+```bash
+python todo.py list-user 1
+```
+
 ## Base de datos
 
 La app crea automáticamente un archivo `todo.db` (SQLite) en el directorio actual la primera vez que se ejecuta. No se necesita configuración previa.
 
-## Estructura de una tarea
+## Estructura de datos
+
+### Task
 
 | Campo       | Tipo   | Descripción                        |
 |-------------|--------|------------------------------------|
@@ -63,3 +83,12 @@ La app crea automáticamente un archivo `todo.db` (SQLite) en el directorio actu
 | title       | text   | Título de la tarea                 |
 | status      | text   | `pending` o `done`                 |
 | created_at  | text   | Fecha de creación (ISO 8601)       |
+| user_id     | int    | Dueño de la tarea (opcional)       |
+
+### User
+
+| Campo  | Tipo   | Descripción        |
+|--------|--------|--------------------|
+| id     | int    | Autoincremental    |
+| name   | text   | Nombre del usuario |
+| email  | text   | Email del usuario  |

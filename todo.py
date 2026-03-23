@@ -4,6 +4,7 @@ import argparse
 from datetime import datetime
 
 DB_NAME = "todo.db"
+VALID_STATUSES = ["pending", "in_progress", "blocked", "review", "done", "cancelled"]
 
 
 def get_connection():
@@ -52,8 +53,8 @@ def list_tasks():
 
 
 def update_status(task_id, status):
-    if status not in ("pending", "done"):
-        print("Status must be 'pending' or 'done'.")
+    if status not in VALID_STATUSES:
+        print(f"Status must be one of: {', '.join(VALID_STATUSES)}")
         return
     conn = get_connection()
     cursor = conn.execute("UPDATE tasks SET status = ? WHERE id = ?", (status, task_id))
@@ -128,7 +129,7 @@ def main():
 
     upd_p = sub.add_parser("update", help="Update task status")
     upd_p.add_argument("id", type=int, help="Task ID")
-    upd_p.add_argument("status", choices=["pending", "done"], help="New status")
+    upd_p.add_argument("status", choices=VALID_STATUSES, help="New status")
 
     del_p = sub.add_parser("delete", help="Delete a task")
     del_p.add_argument("id", type=int, help="Task ID")

@@ -5,3 +5,4 @@ laboratorio 2 usaremos skills, comandos, etc
 
 
 
+- para encuentro 1

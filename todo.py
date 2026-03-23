@@ -23,6 +23,7 @@ def get_connection():
             status TEXT NOT NULL DEFAULT 'pending',
             priority TEXT DEFAULT 'medium',
             created_at TEXT NOT NULL,
+            due_date TEXT DEFAULT NULL,
             user_id INTEGER,
             FOREIGN KEY (user_id) REFERENCES users(id)
         )"""
@@ -203,6 +204,36 @@ def get_tasks_sorted_by_priority():
         print(f"[{row[0]}] {row[1]} ({row[2]}) priority={row[3]} - {row[4]}")
 
 
+def set_due_date(task_id, due_date):
+    conn = get_connection()
+    cursor = conn.execute("UPDATE tasks SET due_date = ? WHERE id = ?", (due_date, task_id))
+    conn.commit()
+    conn.close()
+    if cursor.rowcount == 0:
+        print(f"Task {task_id} not found.")
+    else:
+        print(f"Task {task_id} due date set to {due_date}.")
+
+
+def notify_overdue():
+    conn = get_connection()
+    rows = conn.execute(
+        """SELECT t.id, t.title, t.status, t.due_date, u.name
+           FROM tasks t LEFT JOIN users u ON t.user_id = u.id
+           WHERE t.due_date IS NOT NULL AND t.status != 'done'"""
+    ).fetchall()
+    conn.close()
+    now = datetime.now().isoformat()
+    found = False
+    for row in rows:
+        if row[3] < now:
+            found = True
+            owner = row[4] if row[4] else "unassigned"
+            print(f"OVERDUE: [{row[0]}] {row[1]} ({row[2]}) due={row[3]} owner={owner}")
+    if not found:
+        print("No overdue tasks.")
+
+
 def delete_task_as_user(task_id, user_id):
     conn = get_connection()
     task = conn.execute("SELECT user_id FROM tasks WHERE id = ?", (task_id,)).fetchone()
@@ -264,6 +295,12 @@ def main():
 
     sub.add_parser("list-by-priority", help="List tasks sorted by priority")
 
+    due_p = sub.add_parser("set-due", help="Set task due date")
+    due_p.add_argument("task_id", type=int, help="Task ID")
+    due_p.add_argument("due_date", help="Due date (YYYY-MM-DD)")
+
+    sub.add_parser("notify-overdue", help="Notify overdue tasks")
+
     del_as_p = sub.add_parser("delete-as", help="Delete a task as a specific user")
     del_as_p.add_argument("task_id", type=int, help="Task ID")
     del_as_p.add_argument("user_id", type=int, help="User ID")
@@ -292,6 +329,10 @@ def main():
         set_priority(args.task_id, args.priority)
     elif args.command == "list-by-priority":
         get_tasks_sorted_by_priority()
+    elif args.command == "set-due":
+        set_due_date(args.task_id, args.due_date)
+    elif args.command == "notify-overdue":
+        notify_overdue()
     elif args.command == "delete-as":
         delete_task_as_user(args.task_id, args.user_id)
     else:

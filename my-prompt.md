@@ -5,3 +5,25 @@ laboratorio 2 usaremos skills, comandos, etc
 
 
 
+```
+idea.md
+   ↓
+Analyst → Product Brief
+   ↓
+PM → PRD + Epics + Stories
+   ↓
+Architect → Architecture (optional but recommended)
+   ↓
+Scrum Master → Story Context
+   ↓
+Developer → Implementation
+
+```
+
+
+Realizar un 
+- README.d
+- docs/encuentro1/readme.md
+- docs/encuentro2/readme.md
+
+

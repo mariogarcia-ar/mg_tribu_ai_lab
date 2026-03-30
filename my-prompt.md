@@ -27,3 +27,6 @@ Realizar un
 - docs/encuentro2/readme.md
 
 
+PRD:
+- _bmad-output/planning-artifacts/product-brief-mg_tribu_ai_lab.md
+

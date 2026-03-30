@@ -1,6 +1,6 @@
 # Story 1.1: Create decisions.md and Initialize Database Schema
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -19,12 +19,12 @@ so that all subsequent code respects explicit design decisions.
 
 ## Tasks / Subtasks
 
-- [ ] Create `decisions.md` with all governance rules (AC: #1)
-- [ ] Create `todo.py` with imports: sqlite3, argparse, enum, datetime (AC: #2)
-- [ ] Define `TaskStatus(Enum)` with 6 states and `terminal_states()` classmethod (AC: #3, #4)
-- [ ] Define `TaskPriority(IntEnum)` with 4 levels (AC: #5)
-- [ ] Implement `init_db()` creating users and tasks tables (AC: #6)
-- [ ] Add `if __name__ == '__main__'` with argparse skeleton (AC: #2)
+- [x] Create `decisions.md` with all governance rules (AC: #1)
+- [x] Create `todo.py` with imports: sqlite3, argparse, enum, datetime (AC: #2)
+- [x] Define `TaskStatus(Enum)` with 6 states and `terminal_states()` classmethod (AC: #3, #4)
+- [x] Define `TaskPriority(IntEnum)` with 4 levels (AC: #5)
+- [x] Implement `init_db()` creating users and tasks tables (AC: #6)
+- [x] Add `if __name__ == '__main__'` with argparse skeleton (AC: #2)
 
 ## Dev Notes
 
@@ -51,8 +51,27 @@ so that all subsequent code respects explicit design decisions.
 
 ### Agent Model Used
 
+Claude Sonnet 4.6 (GitHub Copilot)
+
 ### Debug Log References
+
+- RED phase: 23 tests failed (ModuleNotFoundError: no module named todo). Confirmed correct RED state.
+- GREEN phase: 23/23 tests pass after creating todo.py.
 
 ### Completion Notes List
 
+- `decisions.md` written in Spanish per workshop conventions (D-01 through D-06).
+- `todo.py` uses stdlib only: sqlite3, argparse, enum, datetime.
+- `TaskStatus(Enum)`: 6 states. `terminal_states()` returns `{DONE, CANCELLED}` as a set — supports `status in TaskStatus.terminal_states()` pattern from D-02.
+- `TaskPriority(IntEnum)`: LOW=1, MEDIUM=2, HIGH=3, URGENT=4 — integer ordering works natively.
+- `init_db(db_path)` accepts an optional path argument (defaults to `'todo.db'`) — made testable without touching the real DB.
+- `CREATE TABLE IF NOT EXISTS` — idempotent, safe to call multiple times.
+- `owner_id` is nullable; `created_by` is NOT NULL — matches D-05.
+- Status default `'PENDING'` and priority default `2` set at DB level.
+- argparse skeleton in `__main__` — ready for subcommands in subsequent stories.
+
 ### File List
+
+- `decisions.md` — created (governance contract, 6 decisions D-01..D-06)
+- `todo.py` — created (TaskStatus, TaskPriority, init_db, argparse skeleton)
+- `test_todo.py` — created (23 unit tests: TestImports, TestTaskStatus, TestTaskPriority, TestInitDb)
